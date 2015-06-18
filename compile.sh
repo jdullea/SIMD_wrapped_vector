@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm vectors/*
+rm -rf vectors
 
 mkdir vectors
 
