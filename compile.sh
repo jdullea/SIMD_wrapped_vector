@@ -2,6 +2,8 @@
 
 rm vectors/*
 
+mkdir vectors
+
 g++ generate_vectors.cpp -mavx -std=c++11 -o generate_vectors
 
 ./generate_vectors 50
