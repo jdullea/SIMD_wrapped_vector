@@ -18,7 +18,7 @@ public:
 		__m256d _avx4;
 		__m256d _avx5;
 		__m256d _avx6;
-		__m128d _sse0;
+		__m256d _avx7;
 		VectorSIMD30(){};
 		VectorSIMD30(double a){
 			_avx0=_mm256_set_pd(a,a,a,a);
@@ -28,7 +28,7 @@ public:
 			_avx4=_mm256_set_pd(a,a,a,a);
 			_avx5=_mm256_set_pd(a,a,a,a);
 			_avx6=_mm256_set_pd(a,a,a,a);
-			_sse0 = _mm_set_pd(a,a);
+			_avx7=_mm256_set_pd(0,0,a,a);
 		}
 
 		VectorSIMD30(double (&a)[30]){
@@ -39,7 +39,8 @@ public:
 			_avx4=_mm256_set_pd(a[19],a[18],a[17],a[16]);
 			_avx5=_mm256_set_pd(a[23],a[22],a[21],a[20]);
 			_avx6=_mm256_set_pd(a[27],a[26],a[25],a[24]);
-			_sse0 = _mm_set_pd(a[29],a[28]);		}
+			_avx7=_mm256_set_pd(0,0,a[29],a[28]);
+		}
 
 		VectorSIMD30(double _0,double _1,double _2,double _3,double _4,double _5,double _6,double _7,double _8,double _9,double _10,double _11,double _12,double _13,double _14,double _15,double _16,double _17,double _18,double _19,double _20,double _21,double _22,double _23,double _24,double _25,double _26,double _27,double _28,double _29){
 			_avx0=_mm256_set_pd(_3,_2,_1,_0);
@@ -49,10 +50,10 @@ public:
 			_avx4=_mm256_set_pd(_19,_18,_17,_16);
 			_avx5=_mm256_set_pd(_23,_22,_21,_20);
 			_avx6=_mm256_set_pd(_27,_26,_25,_24);
-			_sse0 =_mm_set_pd(_29,_28);
+			_avx7=_mm256_set_pd( 0,0,_29,_28);
 		}
 
-		VectorSIMD30(__m256d _0,__m256d _1,__m256d _2,__m256d _3,__m256d _4,__m256d _5,__m256d _6,__m128d c){
+		VectorSIMD30(__m256d _0,__m256d _1,__m256d _2,__m256d _3,__m256d _4,__m256d _5,__m256d _6,__m256d _7){
 			_avx0= _0;
 			_avx1= _1;
 			_avx2= _2;
@@ -60,18 +61,18 @@ public:
 			_avx4= _4;
 			_avx5= _5;
 			_avx6= _6;
-			_sse0 = c;
+			_avx7= _7;
 		}
 
-		VectorSIMD30& operator =(double a){
-			_avx0=_mm256_set_pd(a,a,a,a);
-			_avx1=_mm256_set_pd(a,a,a,a);
-			_avx2=_mm256_set_pd(a,a,a,a);
-			_avx3=_mm256_set_pd(a,a,a,a);
-			_avx4=_mm256_set_pd(a,a,a,a);
-			_avx5=_mm256_set_pd(a,a,a,a);
-			_avx6=_mm256_set_pd(a,a,a,a);
-			_sse0 = _mm_set_pd(a,a);
+		VectorSIMD30& operator=(double a){
+			_avx0 = _mm256_set_pd(a,a,a,a);
+			_avx1 = _mm256_set_pd(a,a,a,a);
+			_avx2 = _mm256_set_pd(a,a,a,a);
+			_avx3 = _mm256_set_pd(a,a,a,a);
+			_avx4 = _mm256_set_pd(a,a,a,a);
+			_avx5 = _mm256_set_pd(a,a,a,a);
+			_avx6 = _mm256_set_pd(a,a,a,a);
+			_avx7 = _mm256_set_pd(0,0,a,a);
 			return *this;
 		}
 
@@ -83,7 +84,7 @@ public:
 			_avx4=  _mm256_add_pd(_avx4,a._avx4);
 			_avx5=  _mm256_add_pd(_avx5,a._avx5);
 			_avx6=  _mm256_add_pd(_avx6,a._avx6);
-			_sse0 = _mm_add_pd(_sse0, a._sse0);
+			_avx7=  _mm256_add_pd(_avx7,a._avx7);
 			return *this;
 		}
 
@@ -95,13 +96,12 @@ public:
 			_avx4=  _mm256_sub_pd(_avx4,a._avx4);
 			_avx5=  _mm256_sub_pd(_avx5,a._avx5);
 			_avx6=  _mm256_sub_pd(_avx6,a._avx6);
-			_sse0 = _mm_sub_pd(_sse0, a._sse0);
+			_avx7=  _mm256_sub_pd(_avx7,a._avx7);
 			return *this;
 		}
 
 		VectorSIMD30 operator -() const{
 			const static __m256d m1 = _mm256_set_pd(-1.0,-1.0,-1.0,-1.0);
-			const static __m128d m1s = _mm_set_pd(-1.0, -1.0);
 			VectorSIMD30 result;
 			result._avx0=  _mm256_mul_pd(this->_avx0,m1);
 			result._avx1=  _mm256_mul_pd(this->_avx1,m1);
@@ -110,7 +110,7 @@ public:
 			result._avx4=  _mm256_mul_pd(this->_avx4,m1);
 			result._avx5=  _mm256_mul_pd(this->_avx5,m1);
 			result._avx6=  _mm256_mul_pd(this->_avx6,m1);
-			result._sse0 = _mm_mul_pd(this->_sse0, m1s);
+			result._avx7=  _mm256_mul_pd(this->_avx7,m1);
 			return result;
 		}
 
@@ -122,7 +122,7 @@ public:
 			_avx4 =  _mm256_loadu_pd(&a[16]);
 			_avx5 =  _mm256_loadu_pd(&a[20]);
 			_avx6 =  _mm256_loadu_pd(&a[24]);
-			_sse0 = _mm_loadu_pd(&a[28]);
+			_avx7 =  _mm256_loadu_pd(&a[28]);
 		}
 
 		void load_aligned(double const* a){
@@ -133,7 +133,7 @@ public:
 			_avx4 =  _mm256_load_pd(&a[16]);
 			_avx5 =  _mm256_load_pd(&a[20]);
 			_avx6 =  _mm256_load_pd(&a[24]);
-			_sse0 = _mm_load_pd(&a[28]);
+			_avx7 =  _mm256_load_pd(&a[28]);
 		}
 
 		void convert(double *a) const {
@@ -144,7 +144,7 @@ public:
 			_mm256_storeu_pd(&a[16],_avx4);
 			_mm256_storeu_pd(&a[20],_avx5);
 			_mm256_storeu_pd(&a[24],_avx6);
-		_mm_storeu_pd(&a[28], _sse0);
+			_mm256_storeu_pd(&a[28],_avx7);
 		}
 
 		void convert_aligned(double *a) const {
@@ -155,7 +155,7 @@ public:
 			_mm256_storeu_pd(&a[16],_avx4);
 			_mm256_storeu_pd(&a[20],_avx5);
 			_mm256_storeu_pd(&a[24],_avx6);
-		_mm_store_pd(&a[28], _sse0);
+			_mm256_storeu_pd(&a[28],_avx7);
 		}
 
 	};
@@ -164,14 +164,14 @@ public:
 	inline VectorSIMD30 operator*(double a, VectorSIMD30 b){
 		VectorSIMD30 c;
 		__m256d _a =  _mm256_set_pd(a,a,a,a);
-		__m128d _a_s = _mm_set_pd(a,a);		c._avx0=  _mm256_mul_pd(_a, b._avx0);
+		c._avx0=  _mm256_mul_pd(_a, b._avx0);
 		c._avx1=  _mm256_mul_pd(_a, b._avx1);
 		c._avx2=  _mm256_mul_pd(_a, b._avx2);
 		c._avx3=  _mm256_mul_pd(_a, b._avx3);
 		c._avx4=  _mm256_mul_pd(_a, b._avx4);
 		c._avx5=  _mm256_mul_pd(_a, b._avx5);
 		c._avx6=  _mm256_mul_pd(_a, b._avx6);
-		c._sse0 = _mm_mul_pd(_a_s, b._sse0);
+		c._avx7=  _mm256_mul_pd(_a, b._avx7);
 		return c;
 	}
 
@@ -179,7 +179,6 @@ public:
 	inline VectorSIMD30 operator*(VectorSIMD30 a ,double b){
 		VectorSIMD30 c;
 		__m256d _b =  _mm256_set_pd(b,b,b,b);
-		__m128d _b_s =  _mm_set_pd(b,b);
 		c._avx0=  _mm256_mul_pd(a._avx0, _b);
 		c._avx1=  _mm256_mul_pd(a._avx1, _b);
 		c._avx2=  _mm256_mul_pd(a._avx2, _b);
@@ -187,7 +186,7 @@ public:
 		c._avx4=  _mm256_mul_pd(a._avx4, _b);
 		c._avx5=  _mm256_mul_pd(a._avx5, _b);
 		c._avx6=  _mm256_mul_pd(a._avx6, _b);
-c._sse0 = _mm_mul_pd(a._sse0, _b_s);
+		c._avx7=  _mm256_mul_pd(a._avx7, _b);
 		return c;
 	}
 
@@ -197,7 +196,6 @@ c._sse0 = _mm_mul_pd(a._sse0, _b_s);
 		VectorSIMD30 c;
 		double q = static_cast<double>(a);
 		__m256d _a =  _mm256_set_pd(q,q,q,q);
-		__m128d _a_s = _mm_set_pd(q,q);
 		c._avx0=  _mm256_mul_pd(_a, b._avx0);
 		c._avx1=  _mm256_mul_pd(_a, b._avx1);
 		c._avx2=  _mm256_mul_pd(_a, b._avx2);
@@ -205,7 +203,7 @@ c._sse0 = _mm_mul_pd(a._sse0, _b_s);
 		c._avx4=  _mm256_mul_pd(_a, b._avx4);
 		c._avx5=  _mm256_mul_pd(_a, b._avx5);
 		c._avx6=  _mm256_mul_pd(_a, b._avx6);
-		c._sse0 = _mm_mul_pd(_a_s,b._sse0);
+		c._avx7=  _mm256_mul_pd(_a, b._avx7);
 		return c;
 	}
 
@@ -215,8 +213,6 @@ c._sse0 = _mm_mul_pd(a._sse0, _b_s);
 		VectorSIMD30 c;
 		double q = static_cast<double>(b);
 		__m256d _b =  _mm256_set_pd(q,q,q,q);
-		__m128d _b_s = _mm_set_pd(q,q);
-c._sse0 = _mm_mul_pd(a._sse0, _b_s);
 		c._avx0=  _mm256_mul_pd(_b, a._avx0);
 		c._avx1=  _mm256_mul_pd(_b, a._avx1);
 		c._avx2=  _mm256_mul_pd(_b, a._avx2);
@@ -224,6 +220,7 @@ c._sse0 = _mm_mul_pd(a._sse0, _b_s);
 		c._avx4=  _mm256_mul_pd(_b, a._avx4);
 		c._avx5=  _mm256_mul_pd(_b, a._avx5);
 		c._avx6=  _mm256_mul_pd(_b, a._avx6);
+		c._avx7=  _mm256_mul_pd(_b, a._avx7);
 		return c;
 	}
 
@@ -237,7 +234,7 @@ c._sse0 = _mm_mul_pd(a._sse0, _b_s);
 		c._avx4=  _mm256_mul_pd(a._avx4, b._avx4);
 		c._avx5=  _mm256_mul_pd(a._avx5, b._avx5);
 		c._avx6=  _mm256_mul_pd(a._avx6, b._avx6);
-		c._sse0 = _mm_mul_pd(a._sse0,b._sse0);
+		c._avx7=  _mm256_mul_pd(a._avx7, b._avx7);
 		return c;
 	}
 
@@ -251,7 +248,7 @@ c._sse0 = _mm_mul_pd(a._sse0, _b_s);
 		c._avx4=  _mm256_add_pd(a._avx4, b._avx4);
 		c._avx5=  _mm256_add_pd(a._avx5, b._avx5);
 		c._avx6=  _mm256_add_pd(a._avx6, b._avx6);
-		c._sse0 = _mm_add_pd(a._sse0,b._sse0);
+		c._avx7=  _mm256_add_pd(a._avx7, b._avx7);
 		return c;
 	}
 
@@ -265,7 +262,7 @@ c._sse0 = _mm_mul_pd(a._sse0, _b_s);
 		c._avx4=  _mm256_sub_pd(a._avx4, b._avx4);
 		c._avx5=  _mm256_sub_pd(a._avx5, b._avx5);
 		c._avx6=  _mm256_sub_pd(a._avx6, b._avx6);
-		c._sse0 = _mm_sub_pd(a._sse0,b._sse0);
+		c._avx7=  _mm256_sub_pd(a._avx7, b._avx7);
 		return c;
 	}
 
@@ -279,7 +276,7 @@ c._sse0 = _mm_mul_pd(a._sse0, _b_s);
 		c._avx4=  _mm256_div_pd(a._avx4, b._avx4);
 		c._avx5=  _mm256_div_pd(a._avx5, b._avx5);
 		c._avx6=  _mm256_div_pd(a._avx6, b._avx6);
-		c._sse0 = _mm_div_pd(a._sse0,b._sse0);
+		c._avx7=  _mm256_div_pd(a._avx7, b._avx7);
 		return c;
 	}
 
@@ -362,5 +359,6 @@ c._sse0 = _mm_mul_pd(a._sse0, _b_s);
 		os << "{" << ad[0] << ","  << ad[1] << ","  << ad[2] << ","  << ad[3] << ","  << ad[4] << ","  << ad[5] << ","  << ad[6] << ","  << ad[7] << ","  << ad[8] << ","  << ad[9] << ","  << ad[10] << ","  << ad[11] << ","  << ad[12] << ","  << ad[13] << ","  << ad[14] << ","  << ad[15] << ","  << ad[16] << ","  << ad[17] << ","  << ad[18] << ","  << ad[19] << ","  << ad[20] << ","  << ad[21] << ","  << ad[22] << ","  << ad[23] << ","  << ad[24] << ","  << ad[25] << ","  << ad[26] << ","  << ad[27] << ","  << ad[28] << ","  << ad[29] << "}";
 		return os;
 		}
+
 
 

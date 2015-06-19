@@ -12,42 +12,43 @@ using namespace std;
 class VectorSIMD5{
 public:
 		__m256d _avx0;
-		double _d;
+		__m256d _avx1;
 		VectorSIMD5(){};
 		VectorSIMD5(double a){
 			_avx0=_mm256_set_pd(a,a,a,a);
-			_d = a;
+			_avx1=_mm256_set_pd(0,0,0,a);
 		}
 
 		VectorSIMD5(double (&a)[5]){
 			_avx0=_mm256_set_pd(a[3],a[2],a[1],a[0]);
-			_d = a[4];		}
+			_avx1=_mm256_set_pd(0,0,0,a[4]);
+		}
 
 		VectorSIMD5(double _0,double _1,double _2,double _3,double _4){
 			_avx0=_mm256_set_pd(_3,_2,_1,_0);
-			_d = _4;
+			_avx1=_mm256_set_pd( 0,0,0,_4);
 		}
 
-		VectorSIMD5(__m256d _0,double c){
+		VectorSIMD5(__m256d _0,__m256d _1){
 			_avx0= _0;
-			_d = c;
+			_avx1= _1;
 		}
 
 		VectorSIMD5& operator=(double a){
 			_avx0 = _mm256_set_pd(a,a,a,a);
-			_d = a;
+			_avx1 = _mm256_set_pd(0,0,0,a);
 			return *this;
 		}
 
 		VectorSIMD5& operator += (VectorSIMD5 a){
 			_avx0=  _mm256_add_pd(_avx0,a._avx0);
-			_d = _d, a._d;
+			_avx1=  _mm256_add_pd(_avx1,a._avx1);
 			return *this;
 		}
 
 		VectorSIMD5& operator -= (VectorSIMD5 a){
 			_avx0=  _mm256_sub_pd(_avx0,a._avx0);
-			_d = _d - a._d;
+			_avx1=  _mm256_sub_pd(_avx1,a._avx1);
 			return *this;
 		}
 
@@ -55,28 +56,28 @@ public:
 			const static __m256d m1 = _mm256_set_pd(-1.0,-1.0,-1.0,-1.0);
 			VectorSIMD5 result;
 			result._avx0=  _mm256_mul_pd(this->_avx0,m1);
-			result._d = this->_d*(-1);
+			result._avx1=  _mm256_mul_pd(this->_avx1,m1);
 			return result;
 		}
 
 		void load(double const* a){
 			_avx0 =  _mm256_loadu_pd(&a[0]);
-			_d = a[4];
+			_avx1 =  _mm256_loadu_pd(&a[4]);
 		}
 
 		void load_aligned(double const* a){
 			_avx0 =  _mm256_load_pd(&a[0]);
-			_d = a[4];
+			_avx1 =  _mm256_load_pd(&a[4]);
 		}
 
 		void convert(double *a) const {
 			_mm256_storeu_pd(&a[0],_avx0);
-		a[4] =  _d;
+			_mm256_storeu_pd(&a[4],_avx1);
 		}
 
 		void convert_aligned(double *a) const {
 			_mm256_storeu_pd(&a[0],_avx0);
-		a[4] = _d;
+			_mm256_storeu_pd(&a[4],_avx1);
 		}
 
 	};
@@ -86,7 +87,7 @@ public:
 		VectorSIMD5 c;
 		__m256d _a =  _mm256_set_pd(a,a,a,a);
 		c._avx0=  _mm256_mul_pd(_a, b._avx0);
-		c._d = a * b._d;
+		c._avx1=  _mm256_mul_pd(_a, b._avx1);
 		return c;
 	}
 
@@ -95,7 +96,7 @@ public:
 		VectorSIMD5 c;
 		__m256d _b =  _mm256_set_pd(b,b,b,b);
 		c._avx0=  _mm256_mul_pd(a._avx0, _b);
-c._d = a._d * b;
+		c._avx1=  _mm256_mul_pd(a._avx1, _b);
 		return c;
 	}
 
@@ -106,7 +107,7 @@ c._d = a._d * b;
 		double q = static_cast<double>(a);
 		__m256d _a =  _mm256_set_pd(q,q,q,q);
 		c._avx0=  _mm256_mul_pd(_a, b._avx0);
-		c._d = q*b._d;
+		c._avx1=  _mm256_mul_pd(_a, b._avx1);
 		return c;
 	}
 
@@ -116,8 +117,8 @@ c._d = a._d * b;
 		VectorSIMD5 c;
 		double q = static_cast<double>(b);
 		__m256d _b =  _mm256_set_pd(q,q,q,q);
-c._d = a._d * q;
 		c._avx0=  _mm256_mul_pd(_b, a._avx0);
+		c._avx1=  _mm256_mul_pd(_b, a._avx1);
 		return c;
 	}
 
@@ -125,7 +126,7 @@ c._d = a._d * q;
 	inline VectorSIMD5 operator*(VectorSIMD5 a, VectorSIMD5 b){
 		VectorSIMD5 c;
 		c._avx0=  _mm256_mul_pd(a._avx0, b._avx0);
-		c._d = a._d*b._d;
+		c._avx1=  _mm256_mul_pd(a._avx1, b._avx1);
 		return c;
 	}
 
@@ -133,7 +134,7 @@ c._d = a._d * q;
 	inline VectorSIMD5 operator+(VectorSIMD5 a, VectorSIMD5 b){
 		VectorSIMD5 c;
 		c._avx0=  _mm256_add_pd(a._avx0, b._avx0);
-		c._d = (a._d + b._d);
+		c._avx1=  _mm256_add_pd(a._avx1, b._avx1);
 		return c;
 	}
 
@@ -141,7 +142,7 @@ c._d = a._d * q;
 	inline VectorSIMD5 operator-(VectorSIMD5 a, VectorSIMD5 b){
 		VectorSIMD5 c;
 		c._avx0=  _mm256_sub_pd(a._avx0, b._avx0);
-		c._d = (a._d-b._d);
+		c._avx1=  _mm256_sub_pd(a._avx1, b._avx1);
 		return c;
 	}
 
@@ -149,7 +150,7 @@ c._d = a._d * q;
 	inline VectorSIMD5 operator/(VectorSIMD5 a, VectorSIMD5 b){
 		VectorSIMD5 c;
 		c._avx0=  _mm256_div_pd(a._avx0, b._avx0);
-		c._d = (a._d/b._d);
+		c._avx1=  _mm256_div_pd(a._avx1, b._avx1);
 		return c;
 	}
 
@@ -182,5 +183,6 @@ c._d = a._d * q;
 		os << "{" << ad[0] << ","  << ad[1] << ","  << ad[2] << ","  << ad[3] << ","  << ad[4] << "}";
 		return os;
 		}
+
 
 
