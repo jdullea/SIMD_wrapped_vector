@@ -1,6 +1,8 @@
 #!/bin/bash
 
-rm vectors/*
+rm -rf vectors
+
+mkdir vectors
 
 g++ generate_vectors.cpp -mavx -std=c++11 -o generate_vectors
 
