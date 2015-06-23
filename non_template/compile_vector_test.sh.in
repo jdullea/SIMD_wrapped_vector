@@ -1,0 +1,18 @@
+#/bin/bash
+
+./generate_vectors 64
+
+@CMAKE_CXX_COMPILER@ test.cpp -mavx -std=c++11 -o test_vec
+
+./generate_timers 64
+
+a=1
+
+for file in timers/*
+do
+	let "a += 1"
+	name=${file%.*}
+	echo $file
+	@CMAKE_CXX_COMPILER@ $file -mavx -std=c++11 -o $name
+done
+
