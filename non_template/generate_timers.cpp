@@ -26,7 +26,7 @@ int main(int argc, char*argv[]) {
 		file<<"//Name: Jonathan Dullea \n//jdullea@umass.edu\n";
 		file<<"//This file was generatef by generate_timers.cpp\n\n";
 		file<<"#include <iostream>\n#include <x86intrin.h>\n#include \"immintrin.h\"\n#include <cstring>\n#include <cmath>\n";
-		file<<"#include \"../simd_wrapped_vectors.hpp\"\n#include <ctime>\n#include <chrono>\n\n";
+		file<<"#include \"../vectors/vector_"<<n<<".hpp\"\n#include <ctime>\n#include <chrono>\n\n";
 
 		file<<"#define aligned_store __attribute((aligned(32)))\n\n";
 

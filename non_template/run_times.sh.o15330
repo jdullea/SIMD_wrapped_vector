@@ -1,0 +1,11 @@
+./run_all_timers.sh: line 5:  3361 Segmentation fault      ./timer_$i
+./run_all_timers.sh: line 5:  3362 Segmentation fault      ./timer_$i
+./run_all_timers.sh: line 5:  3369 Segmentation fault      ./timer_$i
+./run_all_timers.sh: line 5:  3371 Segmentation fault      ./timer_$i
+./run_all_timers.sh: line 5:  3372 Segmentation fault      ./timer_$i
+./run_all_timers.sh: line 5:  3376 Segmentation fault      ./timer_$i
+./run_all_timers.sh: line 5:  3382 Segmentation fault      ./timer_$i
+./run_all_timers.sh: line 5:  3392 Segmentation fault      ./timer_$i
+./run_all_timers.sh: line 5:  3395 Segmentation fault      ./timer_$i
+./run_all_timers.sh: line 5:  3396 Segmentation fault      ./timer_$i
+./run_all_timers.sh: line 5:  3403 Segmentation fault      ./timer_$i
