@@ -10,12 +10,20 @@
 #include <fstream>
 #include <string>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 using namespace std;
 
 int main(int argc, char*argv[]) {
 
 	int max_num = atoi(argv[1]);
 
+    // If timers folder doesn't exist create it.
+    struct stat st = {0};
+    if(stat("timers/", &st) == -1){
+        mkdir("timers", 0700);
+    }
 
 	for(int n = 2; n <=max_num; n++){	
 		ofstream file;
